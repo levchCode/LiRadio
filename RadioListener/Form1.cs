@@ -23,14 +23,35 @@ namespace RadioListener
        public BindingList<Station> stations = new BindingList<Station>();
         Station selected = new Station();
 
-        public void Parse()
+        public bool Parse()
         {
-            
-            using (StreamReader file = File.OpenText(path))
+            try
             {
-                stations = JsonConvert.DeserializeObject<BindingList<Station>>(File.ReadAllText(path));
+                using (StreamReader file = File.OpenText(path))
+                {
+                    stations = JsonConvert.DeserializeObject<BindingList<Station>>(File.ReadAllText(path));
+                }
+                listBox1.DataSource = stations;
+                return true;
             }
-            listBox1.DataSource = stations;
+            catch (JsonReaderException e)
+            {
+                MessageBox.Show("It seems that list of stations is invalid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                return false;
+            }
+        }
+
+        public bool CheckStations() //Что-то не робит
+        {
+            foreach (Station s in stations)
+            {
+                if (s.Name == null || s.URL == null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public Form1()
@@ -43,14 +64,18 @@ namespace RadioListener
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Parse();
-
+            if (!CheckStations())
+            {
+                MessageBox.Show("Some stations have incorrect data.");
+            }
+            //Parse();
             listBox1.DisplayMember = "Name";
+            if (Parse())
+            {
+                player.URL = stations[0].URL;
 
-            player.URL = stations[0].URL;
-
-            player.controls.play();
-            
+                player.controls.play();
+            }
         }
 
         
@@ -62,6 +87,8 @@ namespace RadioListener
              selected = (Station)listBox1.SelectedItem;
              player.URL = selected.URL;
              player.controls.play();
+             toolStripProgressBar1.Value = 0;
+             toolStripProgressBar1.Value = player.network.bufferingProgress;
              
              
         }
@@ -100,7 +127,7 @@ namespace RadioListener
             if (player.playState == WMPPlayState.wmppsPlaying)
             {
                 button1.Text = "Pause";
-                player.controls.pause();
+                player.controls.stop();
             }
             if(player.playState == WMPPlayState.wmppsPaused)
             {
@@ -119,6 +146,12 @@ namespace RadioListener
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             player.settings.volume = trackBar1.Value;
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.Show();
         }
 
     }

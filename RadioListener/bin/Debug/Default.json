@@ -12,7 +12,8 @@
     {
     	"Name": "BBC Radio 3",
 	    "URL": "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_q"
-    },
+	}
+    ,
 
     {
     	"Name": "BBC Radio 4",
