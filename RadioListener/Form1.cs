@@ -22,6 +22,9 @@ namespace RadioListener
         string path = "Default.json";
        public BindingList<Station> stations = new BindingList<Station>();
         Station selected = new Station();
+        public NotifyIcon ni = new NotifyIcon();
+        bool paused = false;
+       
 
         public bool Parse()
         {
@@ -42,21 +45,12 @@ namespace RadioListener
             }
         }
 
-        public bool CheckStations() //Что-то не робит
-        {
-            foreach (Station s in stations)
-            {
-                if (s.Name == null || s.URL == null)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+     
 
         public Form1()
         {
             InitializeComponent();
+            
             trackBar1.Minimum = 1;
             trackBar1.Maximum = 100;
             trackBar1.Value = 50;
@@ -64,10 +58,7 @@ namespace RadioListener
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (!CheckStations())
-            {
-                MessageBox.Show("Some stations have incorrect data.");
-            }
+            
             //Parse();
             listBox1.DisplayMember = "Name";
             if (Parse())
@@ -95,13 +86,21 @@ namespace RadioListener
 
         private void Form1_Resize(object sender, EventArgs e)  //НЕ работает
         {
+            ni.BalloonTipTitle = "Now listening";
+            ni.BalloonTipText = selected.Name;
+
+           
             if (this.WindowState == FormWindowState.Minimized)
             {
+                ni.Visible = true;
+                ni.ShowBalloonTip(1000);
+                ShowInTaskbar = false;
                 Hide();
-                notifyIcon1.Visible = true;
-                notifyIcon1.BalloonTipText = selected.Name;
-                notifyIcon1.ShowBalloonTip(1000);
-            }  
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                ni.Visible = false;
+            }
         }
 
         private void newStationListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -123,16 +122,16 @@ namespace RadioListener
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            if (player.playState == WMPPlayState.wmppsPlaying)
+            paused = !paused;
+            if (player.playState == WMPPlayState.wmppsPlaying && !paused)
             {
                 button1.Text = "Pause";
                 player.controls.stop();
             }
-            if(player.playState == WMPPlayState.wmppsPaused)
+            else
             {
-                button1.Text = "Play";
                 player.controls.play();
+                button1.Text = "Play";
             }
         }
 
@@ -140,7 +139,7 @@ namespace RadioListener
         {
             Show();
             this.WindowState = FormWindowState.Normal;
-            notifyIcon1.Visible = false;  
+            ShowInTaskbar = false;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -152,6 +151,12 @@ namespace RadioListener
         {
             AboutBox1 about = new AboutBox1();
             about.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            
         }
 
     }
