@@ -20,9 +20,9 @@ namespace RadioListener
         
         public WindowsMediaPlayer player = new WindowsMediaPlayer();
         string path = "Default.json";
-       public BindingList<Station> stations = new BindingList<Station>();
+        public BindingList<Station> stations = new BindingList<Station>();
         Station selected = new Station();
-        public NotifyIcon ni = new NotifyIcon();
+    
         bool paused = false;
        
 
@@ -50,7 +50,7 @@ namespace RadioListener
         public Form1()
         {
             InitializeComponent();
-            
+            ni.Icon = SystemIcons.Information;
             trackBar1.Minimum = 1;
             trackBar1.Maximum = 100;
             trackBar1.Value = 50;
@@ -58,9 +58,10 @@ namespace RadioListener
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+           
             //Parse();
             listBox1.DisplayMember = "Name";
+           
             if (Parse())
             {
                 player.URL = stations[0].URL;
@@ -84,22 +85,13 @@ namespace RadioListener
              
         }
 
-        private void Form1_Resize(object sender, EventArgs e)  //НЕ работает
+        private void Form1_Resize(object sender, EventArgs e)
         {
-            ni.BalloonTipTitle = "Now listening";
-            ni.BalloonTipText = selected.Name;
-
-           
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
-                ni.Visible = true;
-                ni.ShowBalloonTip(1000);
-                ShowInTaskbar = false;
+                ni.BalloonTipText = selected.Name;
+                ni.ShowBalloonTip(10000);
                 Hide();
-            }
-            else if (FormWindowState.Normal == this.WindowState)
-            {
-                ni.Visible = false;
             }
         }
 
@@ -135,11 +127,11 @@ namespace RadioListener
             }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)   //НЕ работает
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e) 
         {
             Show();
             this.WindowState = FormWindowState.Normal;
-            ShowInTaskbar = false;
+          
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -153,11 +145,7 @@ namespace RadioListener
             about.Show();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-            
-        }
+        
 
     }
 }
