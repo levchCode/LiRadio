@@ -9,6 +9,7 @@ namespace RadioListener
    public class Station
     {
       public string Name {get; set;}
+      public string Thumbnail { get; set; }
       public string URL {get; set;}
 
        public override string ToString()

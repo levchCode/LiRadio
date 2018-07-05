@@ -37,7 +37,7 @@ namespace RadioListener
                 listBox1.DataSource = stations;
                 return true;
             }
-            catch (JsonReaderException e)
+            catch (JsonReaderException)
             {
                 MessageBox.Show("It seems that list of stations is invalid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
@@ -74,13 +74,19 @@ namespace RadioListener
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-             player.controls.stop();
+            player.controls.stop();
              
-             selected = (Station)listBox1.SelectedItem;
-             player.URL = selected.URL;
-             player.controls.play();
-             toolStripProgressBar1.Value = 0;
-             toolStripProgressBar1.Value = player.network.bufferingProgress;
+            selected = (Station)listBox1.SelectedItem;
+            player.URL = selected.URL;
+            player.controls.play();
+            label1.Text = selected.Name;
+            if (selected.Thumbnail != "")
+            {
+                pictureBox1.ImageLocation = selected.Thumbnail;
+            }
+
+            toolStripProgressBar1.Value = 0;
+            toolStripProgressBar1.Value = player.network.bufferingProgress;
              
              
         }
@@ -145,7 +151,11 @@ namespace RadioListener
             about.Show();
         }
 
-        
-
+        private void watchIPTVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TV tv = new TV();
+            player.controls.stop();
+            tv.Show();
+        }
     }
 }

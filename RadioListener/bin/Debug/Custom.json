@@ -1,13 +1,23 @@
 [
 	{
-	"Name": "BBC Radio 1",
-	"URL": "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_q"
+		"Name": "Вести FM",
+		"thumbnail":"http://online-red.com/images/radio-logo/Vesti.png",
+		"URL" : "http://icecast.vgtrk.cdnvideo.ru/vestifm_mp3_192kbps"
+	},
+
+	{
+	"Name": "BBC World Service",
+	"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/BBC_World_Service_red.svg/200px-BBC_World_Service_red.svg.png",
+	"URL": "http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
     },
 
 	{
 	"Name": "Idobi Radio",
+	"thumbnail":"https://i.ido.bi/assets/2013/06/idobi-radio-logo-800x800.jpg",
 	"URL" : "http://hobbes.idobi.com/;stream.mp3"
-	}   
+	}
+
+	   
 ]
 
 	
